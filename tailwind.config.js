@@ -1,11 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./templates/**/*.html", // Templates at the project level
-    "./**/templates/**/*.html", // Templates inside apps
+    "./events/templates/**/*.html",
+    "./templates/**/*.html",
+    "./**/templates/**/*.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'sans': ['Barlow', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };

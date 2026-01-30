@@ -1,0 +1,28 @@
+{% extends 'navbar.html' %}
+{% load static %}
+{% block title %} {{ action }} Event{% endblock title %}
+
+{% block events %}
+
+<div class="w-1/2 mx-auto mt-8">
+        <div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="px-2 py-1 {% if message.tags == 'success' %}bg-green-500 text-white text-center w-1/2{% endif %} ">{{message}}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <form method="POST" class='mt-10'>
+            
+            {% csrf_token %}
+            {{event}}
+            {{event_form}}
+            <button
+                type="submit"
+                class="w-full bg-rose-600 px-4 py-2 text-white rounded-lg hover:bg-rose-700 transition">
+                Submit
+            </button>
+        </form>
+</div>
+
+{% endblock events %}

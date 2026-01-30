@@ -4,19 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% comment %} Google Fonts {% endcomment %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     {% comment %} tailwind css {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
 
     {% comment %} font awesome {% endcomment %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     {% comment %} style {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    
+
     {% comment %} title {% endcomment %}
     <title>{% block title %}{% endblock title %}</title>
-
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" style="font-family: 'Barlow', sans-serif;">
 
     {% comment %} header start {% endcomment %}
     <header class="bg-white shadow-md fixed w-full top-0 z-50">
@@ -25,7 +31,7 @@
                 {% comment %} Logo {% endcomment %}
                 <div class="flex items-center">
                     <a href="/" class="text-2xl font-bold text-rose-500 hover:text-rose-700 transition duration-300">
-                        <i class="fas fa-code mr-2"></i>MyApp
+                        <i class="fas fa-code mr-2"></i>My Events
                     </a>
                 </div>
 
@@ -35,19 +41,19 @@
                         Home
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="/about" class="text-gray-700 hover:text-rose-600 font-medium transition duration-300 relative group">
-                        About
+                    <a href="/create-event/" class="text-gray-700 hover:text-rose-600 font-medium transition duration-300 relative group">
+                        Create Event
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="/dashboard" class="text-gray-700 hover:text-rose-600 font-medium transition duration-300 relative group">
+                    <a href="/dashboard/" class="text-gray-700 hover:text-rose-600 font-medium transition duration-300 relative group">
                         Dashboard
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="/contact" class="text-gray-700 hover:text-rose-600 font-medium transition duration-300 relative group">
+                    <a href="/" class="text-gray-700 hover:text-rose-600 font-medium transition duration-300 relative group">
                         Contact
                         <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-rose-600 group-hover:w-full transition-all duration-300"></span>
                     </a>
-                    <a href="/login" class="bg-rose-600 text-white px-6 py-2 rounded-lg hover:bg-rose-700 transition duration-300 shadow-md hover:shadow-lg">
+                    <a href="/" class="bg-rose-600 text-white px-6 py-2 rounded-lg hover:bg-rose-700 transition duration-300 shadow-md hover:shadow-lg">
                         Login
                     </a>
                 </div>
@@ -61,39 +67,39 @@
             </div>
 
 
-            {% comment %} hamburger and side bar starts {% endcomment %}
+            {% comment %} hamburger and top bar starts {% endcomment %}
             <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4">
                 <div class="flex flex-col space-y-3">
                     <a href="/" class="text-gray-700 hover:text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-lg font-medium transition duration-300">
                         <i class="fas fa-home mr-2"></i>Home
                     </a>
-                    <a href="/about" class="text-gray-700 hover:text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-lg font-medium transition duration-300">
-                        <i class="fas fa-info-circle mr-2"></i>About
+                    <a href="/create-event/" class="text-gray-700 hover:text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-lg font-medium transition duration-300">
+                        <i class="fas fa-info-circle mr-2"></i>Create Event
                     </a>
-                    <a href="/dashboard" class="text-gray-700 hover:text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-lg font-medium transition duration-300">
+                    <a href="/dashboard/" class="text-gray-700 hover:text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-lg font-medium transition duration-300">
                         <i class="fas fa-chart-line mr-2"></i>Dashboard
                     </a>
-                    <a href="/contact" class="text-gray-700 hover:text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-lg font-medium transition duration-300">
+                    <a href="/" class="text-gray-700 hover:text-rose-600 hover:bg-rose-50 px-4 py-2 rounded-lg font-medium transition duration-300">
                         <i class="fas fa-envelope mr-2"></i>Contact
                     </a>
-                    <a href="/login" class="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition duration-300 text-center">
+                    <a href="/" class="bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition duration-300 text-center">
                         <i class="fas fa-sign-in-alt mr-2"></i>Login
                     </a>
                 </div>
             </div>
-            {% comment %} hamburger and side bar ends {% endcomment %}
+            {% comment %} hamburger and top bar ends {% endcomment %}
 
 
         </nav>
     </header>
     {% comment %} header ends {% endcomment %}
 
-    <main class="pt-20">
+    <main>
         {% block events %}
         {% endblock events %}
     </main>
 
-    {% comment %} for responsive mobile view {% endcomment %}
+    {% comment %} Hamburger work {% endcomment %}
     <script>
         const menuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
