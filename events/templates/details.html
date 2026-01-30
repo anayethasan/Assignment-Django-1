@@ -1,0 +1,147 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block title %}details{% endblock title %}
+
+{% block events %}
+
+<section class="details py-10 px-4 bg-rose-50 mt-10">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+
+        {% if messages %}
+            <div class="p-4">
+                {% for message in messages %}
+                <div class="mb-2 p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="relative">
+            <img src="{% static event.image %}"
+                 alt=""
+                 class="w-full h-64 sm:h-80 md:h-96 object-cover">
+
+            <div class="absolute top-4 left-4 bg-rose-500 text-white
+                        px-4 py-2 rounded-lg text-sm font-semibold shadow">
+                <i class="fa-solid fa-calendar-days mr-1"></i>
+                {{ event.date|date:"d M" }}
+            </div>
+        </div>
+
+        <div class="p-6 md:p-8">
+
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+                {{ event.name }}
+            </h2>
+
+            <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-6">
+                {{ event.description }}
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+
+                <div class="border border-rose-100 bg-rose-50 p-4 rounded-xl">
+                    <h5 class="text-sm text-rose-600 font-semibold mb-1">
+                        <i class="fa-solid fa-clock mr-1"></i>
+                        Event Starts
+                    </h5>
+                    <p class="font-semibold text-gray-800">
+                        {{ event.date|date:"d M" }} · {{ event.time|time:"h:i A" }}
+                    </p>
+                </div>
+
+                <div class="border border-rose-100 bg-rose-50 p-4 rounded-xl">
+                    <h5 class="text-sm text-rose-600 font-semibold mb-1">
+                        <i class="fa-solid fa-location-dot mr-1"></i>
+                        Location
+                    </h5>
+                    <p class="font-semibold text-gray-800">
+                        {{ event.get_location_display }}
+                    </p>
+                </div>
+
+                <div class="border border-rose-100 bg-rose-50 p-4 rounded-xl">
+                    <h5 class="text-sm text-rose-600 font-semibold mb-1">
+                        <i class="fa-solid fa-users mr-1"></i>
+                        Total Participants
+                    </h5>
+                    <p class="font-semibold text-gray-800">
+                        {{ participants.count }} People
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="mb-8 border border-rose-200 rounded-xl p-6 bg-rose-50">
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus text-rose-500"></i>
+                    Join This Event
+                </h3>
+
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="join_event">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
+                            {{ participant_form.name }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Your Email</label>
+                            {{ participant_form.email }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full sm:w-auto bg-rose-500 hover:bg-rose-600
+                            text-white font-semibold px-6 py-2 rounded-lg transition">
+                        <i class="fa-solid fa-check mr-2"></i>
+                        Join Event
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-user-group text-rose-500"></i>
+                    Participants ({{ participants.count }})
+                </h3>
+
+                <div class="grid grid-cols-1 gap-3">
+                    {% for participant in participants %}
+                    <div class="bg-rose-100 text-rose-700 px-4 py-3 rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-semibold">{{ participant.name }}</p>
+                            <p class="text-sm text-rose-600">{{ participant.email }}</p>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <a 
+                                href="{% url 'update_participant' event.id participant.id %}"
+                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition">
+                                <i class="fa-solid fa-edit"></i> Edit
+                            </a>
+
+                            <form method="POST" class="inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_participant">
+                                <input type="hidden" name="participant_id" value="{{ participant.id }}">
+                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm transition">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-center text-gray-500 py-4">No participants yet. Be the first to join!</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock events %}
