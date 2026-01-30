@@ -1,0 +1,140 @@
+{% extends 'navbar.html' %}
+{% load static %}
+{% block title %}Organizer Dashboard{% endblock title %}
+
+
+{% block events %}
+
+<section class="p-6 bg-gray-100 min-h-dvh">
+    <div class="max-w-[1200px] mx-auto">
+
+        {% comment %} Header  {% endcomment %}
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+                Organizer Dashboard
+            </h1>
+        </header>
+
+        {% comment %} Stats Grid  {% endcomment %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+            {% comment %} Total Participants {% endcomment %}
+            <div class="bg-white rounded-xl p-6 shadow-sm cursor-pointer hover:shadow-md transition">
+                <p class="text-sm font-medium text-gray-500 mb-3">TOTAL PARTICIPANTS</p>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold text-gray-800">{{ total_participants }}</h2>
+                    <div class="bg-rose-100 p-3 rounded-full">
+                        <i class="fa-solid fa-users text-rose-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} Total Events {% endcomment %}
+            <a href="?filter=all">
+            <div class="bg-white rounded-xl p-6 shadow-sm cursor-pointer hover:shadow-md transition">
+                <p class="text-sm font-medium text-gray-500 mb-3">TOTAL EVENTS</p>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold text-gray-800">{{ total_events }}</h2>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fa-solid fa-calendar-check text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            </a>
+
+            {% comment %} Upcoming Events {% endcomment %}
+            <a href="?filter=upcoming">
+            <div class="bg-white rounded-xl p-6 shadow-sm cursor-pointer hover:shadow-md transition">
+                <p class="text-sm font-medium text-gray-500 mb-3">UPCOMING EVENTS</p>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold text-gray-800">{{ upcoming_events_count }}</h2>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fa-solid fa-hourglass-start text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            </a>
+
+            {% comment %} Past Events {% endcomment %}
+            <a href="?filter=past">
+            <div class="bg-white rounded-xl p-6 shadow-sm cursor-pointer hover:shadow-md transition">
+                <p class="text-sm font-medium text-gray-500 mb-3">PAST EVENTS</p>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold text-gray-800">{{ past_events_count }}</h2>
+                    <div class="bg-gray-200 p-3 rounded-full">
+                        <i class="fa-solid fa-clock-rotate-left text-gray-700 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            </a>
+
+        </div>
+
+        {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                    <div class="px-6 py-4 rounded-lg shadow-md {% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'error' %}bg-red-500{% else %}bg-blue-500{% endif %} text-white">
+                        <i class="fa-solid fa-circle-check mr-2"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% comment %} Today's Events {% endcomment %}
+        <div class="bg-white rounded-xl shadow-sm p-6">
+
+            {% comment %} Section Title {% endcomment %}
+            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
+                {{ title }}
+                <span class="text-sm text-gray-500">
+                    {{ events.count }} event{% if events.count != 1 %}{% endif %}
+                </span>
+            </h2>
+
+            <div class="space-y-4">
+                {% for event in events %}
+                {% comment %} Event Item {% endcomment %}
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between
+                            bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition cursor-pointer">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">
+                           {{ event.name }}
+                        </h3>
+                        <p class="text-sm text-gray-500">
+                            {{ event.time|time:"g:i A" }} --> {{ event.get_location_display }} --> {{ event.category.name }}
+                        </p>
+                        <p class="text-xs text-gray-400 mt-1">
+                            <i class="fa-solid fa-users mr-1"></i>
+                            {{ event.participant_count }} participant{% if event.participant_count != 1 %}s{% endif %}
+                        </p>
+                    </div>
+                    <span class="mt-2 sm:mt-0 text-sm font-medium text-rose-600">
+                        <div class="flex gap-2">
+                            <a 
+                                href="{% url 'create_event' %}?update={{ event.id }}"
+                                class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm transition">
+                                <i class="fa-solid fa-edit"></i> Edit
+                            </a>
+
+                            <form method="POST" class="inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_event">
+                                <input type="hidden" name="event_id" value="{{ event.id }}">
+                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg text-sm transition">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </span>
+                </div>
+
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</section>
+    
+{% endblock events %}
+    
