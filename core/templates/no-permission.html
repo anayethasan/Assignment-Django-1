@@ -1,0 +1,15 @@
+{% extends 'navbar.html' %}
+{% block title %}No Permission{% endblock title %}
+
+{% block events %}
+<section class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="text-center bg-white p-12 rounded-2xl shadow-xl max-w-md">
+        <i class="fa-solid fa-lock text-red-400 text-6xl mb-6"></i>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Access Denied</h1>
+        <p class="text-gray-600 mb-8">You don't have permission to access this page.</p>
+        <a href="/" class="bg-rose-500 hover:bg-rose-600 text-white px-6 py-3 rounded-lg font-semibold transition">
+            <i class="fa-solid fa-home mr-2"></i>Go to Home
+        </a>
+    </div>
+</section>
+{% endblock events %}
