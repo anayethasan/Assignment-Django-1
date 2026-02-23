@@ -1,131 +1,141 @@
 {% extends 'navbar.html' %}
 {% load static %}
-
 {% block title %}Home{% endblock title %}
-
 
 {% block events %}
 
 <section class="hero-section">
-    <div 
-        class="h-screen bg-center bg-no-repeat bg-cover flex items-center justify-center"
-        style="background-image: url('{% static 'image/banner.jpeg' %}');"
-    >
-        <!-- Optional overlay -->
+    <div class="h-screen bg-center bg-no-repeat bg-cover flex items-center justify-center relative"
+         style="background-image: url('{% static 'image/banner.jpeg' %}');">
         <div class="bg-black bg-opacity-40 w-full h-full absolute top-0 left-0"></div>
-
-        <!-- Hero content -->
         <div class="relative z-10 text-center px-4">
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
-                Welcome to My Events
-            </h1>
-            <p class="text-white text-lg sm:text-xl md:text-2xl mb-6">
-                Discover amazing events around you
-            </p>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">Welcome to My Events</h1>
+            <p class="text-white text-lg sm:text-xl md:text-2xl mb-6">Discover amazing events around you</p>
         </div>
     </div>
 </section>
 
-
-{% comment %} all events {% endcomment %}
 <section class="all-events py-6 my-6 px-4" id="events">
-    
-    <h1 class="text-rose-500 font-bold text-3xl sm:text-4xl md:text-5xl text-center mb-6">
-        Events
-    </h1>
+    <h1 class="text-rose-500 font-bold text-3xl sm:text-4xl md:text-5xl text-center mb-6">Events</h1>
 
-     {% comment %} Search Box  {% endcomment %}
-    <form method="GET" action="{% url 'home' %}" class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-center mb-4">
+    {% if messages %}
+    <div class="max-w-4xl mx-auto mb-4">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg mb-2
+            {% if message.tags == 'success' %}bg-green-100 text-green-800
+            {% elif message.tags == 'error' %}bg-red-100 text-red-800
+            {% else %}bg-blue-100 text-blue-800{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-        <input
-            type="text"
-            placeholder="Enter your event name..."
-            class="w-full sm:w-1/2 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400"
-        >
-
-        <select
-            name="location"
-            id="location"
-            class="w-full sm:w-1/4 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400"
-        >
+    {% comment %} Search {% endcomment %}
+    <form method="GET" action="{% url 'home' %}" class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-center mb-6">
+        <input type="text" name="search" placeholder="Enter your event name..."
+               value="{{ search_query }}"
+               class="w-full sm:w-1/2 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400">
+        <select name="location" class="w-full sm:w-1/4 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-rose-400">
             <option value="">Select location</option>
             {% for loc_code, loc_name in locations %}
-                <option value="{{ loc_code }}" {% if selected_location == loc_code %}selected{% endif %}>
-                {{ loc_name }}
+                <option value="{{ loc_code }}" {% if selected_location == loc_code %}selected{% endif %}>{{ loc_name }}</option>
             {% endfor %}
         </select>
-
-        <button
-            type="submit"
-            class="w-full sm:w-auto bg-rose-500 hover:bg-rose-600 text-white font-semibold px-6 py-2 rounded-lg transition">
+        <button type="submit" class="w-full sm:w-auto bg-rose-500 hover:bg-rose-600 text-white font-semibold px-6 py-2 rounded-lg transition">
             Search
         </button>
-
     </form>
 
-     {% comment %} cards  {% endcomment %}
-    <div class="space-y-6" >
-        {% for event in events %}  
+    {% comment %} Event Cards {% endcomment %}
+    <div class="space-y-6">
+        {% for event in events %}
         <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row mb-4">
-             {% comment %} Left side {% endcomment %}
-            <div class="relative md:w-1/3 w-full">
-                <img src="{% static 'image/events.jpeg' %}"
-                    alt="event image"
-                    class="w-full h-60 md:h-full object-cover">
 
-                {% comment %} Date {% endcomment %}
-                <div class="absolute top-4 left-4 bg-rose-500 text-white
-                            px-3 py-1 rounded-lg text-sm font-semibold shadow">
-                    <i class="fa-solid fa-calendar-days mr-1"></i>
-                    {{ event.date|date:"d M" }}
+            {% comment %} Left: Image {% endcomment %}
+            <div class="relative md:w-1/3 w-full">
+                {% if event.image %}
+                    <img src="{{ event.image.url }}" alt="{{ event.name }}" class="w-full h-60 md:h-full object-cover">
+                {% else %}
+                    <img src="{% static 'image/events.jpeg' %}" alt="event" class="w-full h-60 md:h-full object-cover">
+                {% endif %}
+                <div class="absolute top-4 left-4 bg-rose-500 text-white px-3 py-1 rounded-lg text-sm font-semibold shadow">
+                    <i class="fa-solid fa-calendar-days mr-1"></i>{{ event.date|date:"d M" }}
                 </div>
             </div>
 
-            {% comment %} Right side {% endcomment %}
+            {% comment %} Right: Content {% endcomment %}
             <div class="md:w-2/3 w-full p-6 flex flex-col justify-between">
-
                 <div>
-                    <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">
-                        {{ event.name }}
-                    </h1>
-
-                    <p class="text-gray-600 text-sm md:text-base">
-                        {{ event.description|truncatewords:30 }}
-                    </p>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">{{ event.name }}</h1>
+                    <p class="text-gray-600 text-sm md:text-base">{{ event.description|truncatewords:30 }}</p>
                 </div>
 
-                {% comment %} down row {% endcomment %}
-                <div class="mt-6 flex flex-col sm:flex-row
-                            sm:items-center sm:justify-between gap-4">
+                <div class="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
                     <p class="text-gray-500 text-sm font-medium flex items-center gap-2">
                         <i class="fa-solid fa-location-dot text-rose-500"></i>
                         {{ event.get_location_display }}
                     </p>
 
-                    <button class="bg-rose-500 hover:bg-rose-600
-                                text-white px-5 py-2 rounded-lg
-                                font-semibold transition flex items-center gap-2">
-                        <i class="fa-solid fa-eye"></i>
-                        <a href="{% url 'details' event.id %}">Event Details</a>
-                    </button>
-
                     <p class="text-gray-700 text-sm font-semibold flex items-center gap-2">
                         <i class="fa-solid fa-users text-rose-500"></i>
-                        {{ event.participants.count }} Participants
+                        {{ event.participant_count }} Participants
                     </p>
-                </div>
 
+                    <div class="flex gap-2 flex-wrap">
+
+                        {% comment %} View Events Button — সবাই দেখবে {% endcomment %}
+                        <a href="{% url 'details' event.id %}"
+                           class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-eye"></i> View Events
+                        </a>
+
+                        {% comment %} RSVP Button {% endcomment %}
+                        {% if user.is_authenticated %}
+
+                            {% if user.is_superuser or user.groups.all.0.name == 'Admin' %}
+                                {% comment %} Admin{% endcomment %}
+
+                            {% elif user.groups.all.0.name == 'Organizer' %}
+                                {% comment %} Organizer {% endcomment %}
+
+                            {% else %}
+                                {% comment %} Normal User {% endcomment %}
+                                {% if event.id in user_rsvp_event_ids %}
+                                    {% comment %} Already RSVP's — disabled {% endcomment %}
+                                    <button disabled
+                                            class="bg-gray-200 text-gray-400 px-4 py-2 rounded-lg font-semibold text-sm flex items-center gap-2 cursor-not-allowed">
+                                        <i class="fa-solid fa-check-circle"></i> RSVP'd
+                                    </button>
+                                {% else %}
+                                    <a href="{% url 'quick-rsvp' event.id %}"
+                                       class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2 text-sm">
+                                        <i class="fa-solid fa-ticket"></i> RSVP
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+
+                        {% else %}
+                            {% comment %} log in na kora thakle login page niye jabe {% endcomment %}
+                            <a href="{% url 'sign-in' %}?next={% url 'quick-rsvp' event.id %}"
+                               class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-ticket"></i> RSVP
+                            </a>
+                        {% endif %}
+
+                    </div>
+                </div>
             </div>
         </div>
+
         {% empty %}
         <div class="text-center py-12">
             <p class="text-gray-500 text-lg">No events found.</p>
         </div>
-        {% endfor %}  
+        {% endfor %}
     </div>
-
-
+    
 </section>
 
 {% endblock events %}

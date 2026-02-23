@@ -1,0 +1,58 @@
+{% extends 'navbar.html' %}
+{% load static %}
+{% block title %}User List{% endblock title %}
+
+{% block events %}
+<section class="p-6 bg-gray-100 min-h-screen">
+    <div class="max-w-5xl mx-auto">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">User List</h1>
+        </header>
+
+        {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+            <div class="px-6 py-4 rounded-lg shadow-md mb-2
+                {% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'error' %}bg-red-500{% else %}bg-blue-500{% endif %} text-white">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="space-y-3">
+                {% for u in users %}
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition">
+                    <div>
+                        <p class="font-semibold text-gray-800">{{ u.username }}
+                            {% if u.is_superuser %}
+                                <span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Superuser</span>
+                            {% endif %}
+                        </p>
+                        <p class="text-sm text-gray-500">{{ u.email }}</p>
+                        <p class="text-xs text-gray-400 mt-1">Role: <span class="font-medium text-indigo-600">{{ u.group_name }}</span></p>
+                    </div>
+                    <div class="flex gap-2 mt-2 sm:mt-0">
+                        <a href="{% url 'assign-role' u.id %}"
+                        class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">
+                            <i class="fa-solid fa-user-tag mr-1"></i>Assign Role
+                        </a>
+                        <a href="{% url 'delete-user' u.id %}"
+                        onclick="return confirm('Are you sure you want to delete {{ u.username }}?')"
+                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">
+                            <i class="fas fa-trash mr-1"></i> Delete
+                        </a>
+                    </div>
+                </div>
+                {% empty %}
+
+                <p class="text-center text-gray-500 py-6">No users found.</p>
+
+                {% endfor %}
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock events %}

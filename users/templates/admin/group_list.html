@@ -1,0 +1,33 @@
+{% extends 'navbar.html' %}
+{% load static %}
+{% block title %}Groups{% endblock title %}
+
+{% block events %}
+<section class="p-6 bg-gray-100 min-h-screen">
+    <div class="max-w-4xl mx-auto">
+
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Groups</h1>
+            <a href="{% url 'create-group' %}" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">
+                <i class="fa-solid fa-plus mr-1"></i>Create Group
+            </a>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <div class="space-y-3">
+                {% for group in groups %}
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <h3 class="font-semibold text-gray-800">{{ group.name }}</h3>
+                    <p class="text-sm text-gray-500 mt-1">
+                        Permissions: {{ group.permissions.count }}
+                    </p>
+                </div>
+                {% empty %}
+                <p class="text-center text-gray-500 py-6">No groups found.</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+    </div>
+</section>
+{% endblock events %}

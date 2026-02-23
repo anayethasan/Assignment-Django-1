@@ -12,14 +12,13 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <form method="POST" class='mt-10'>
+        <form method="POST" class='mt-10' enctype="multipart/form-data">
             
             {% csrf_token %}
-            {{event}}
             {{event_form}}
             <button
                 type="submit"
-                class="w-full bg-rose-600 px-4 py-2 text-white rounded-lg hover:bg-rose-700 transition">
+                class="w-full bg-rose-600 px-4 py-2 text-white rounded-lg hover:bg-rose-700 transition mt-2">
                 Submit
             </button>
         </form>
